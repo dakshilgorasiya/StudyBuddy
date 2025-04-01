@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using StudyBuddy.Data;
+using StudyBuddy.Interfaces;
 using StudyBuddy.Models;
+using StudyBuddy.Repositories;
+using StudyBuddy.Services;
+using StudyBuddy.Mappings;
+using Microsoft.AspNetCore.Mvc;
 
 namespace StudyBuddy
 {
@@ -22,6 +27,18 @@ namespace StudyBuddy
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Dependect Injection
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddAutoMapper(typeof(UserMapping));
+
+            builder.Services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true; // Disable automatic validation response
+                });
+
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
@@ -41,7 +58,6 @@ namespace StudyBuddy
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
