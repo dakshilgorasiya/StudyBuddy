@@ -4,6 +4,7 @@ namespace StudyBuddy.Interfaces
 {
     public interface IUserService
     {
-        Task<string> RegisterUser(UserRegisterRequestDTO dto);
+        Task<UserRegisterResponseDTO> RegisterUser(UserRegisterRequestDTO dto);
+        Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO dto);
     }
 }

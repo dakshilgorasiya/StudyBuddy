@@ -25,5 +25,10 @@ namespace StudyBuddy.Repositories
             await _context.SaveChangesAsync();
             return user;
         }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace StudyBuddy.Interfaces
     {
         Task<bool> UserExists(string email);
         Task<User> Register(User user);
+        Task<User> GetUserByEmail(string email);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StudyBuddy.Common;
 using StudyBuddy.DTOs;
+using StudyBuddy.Helpers;
 using StudyBuddy.Interfaces;
 using StudyBuddy.Models;
 
@@ -10,14 +11,16 @@ namespace StudyBuddy.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly JwtHelper _jwtHelper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, JwtHelper jwtHelper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _jwtHelper = jwtHelper;
         }
 
-        public async Task<string> RegisterUser(UserRegisterRequestDTO dto)
+        public async Task<UserRegisterResponseDTO> RegisterUser(UserRegisterRequestDTO dto)
         {
 
             if (dto == null)
@@ -35,7 +38,30 @@ namespace StudyBuddy.Services
             user.Role = UserRole.User;
 
             await _userRepository.Register(user);
-            return "User registered successfully!";
+
+            var userResponse = _mapper.Map<UserRegisterResponseDTO>(user);
+
+            return userResponse;
         }
+
+        public async Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO dto)
+        {
+            var user = await _userRepository.GetUserByEmail(dto.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+            {
+                return null; // Invalid credentials
+            }
+
+            string token = _jwtHelper.GenerateToken(user);
+            return new UserLoginResponseDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Bio = user.Bio,
+                Token = token
+            };
+        }
+
     }
+
 }
