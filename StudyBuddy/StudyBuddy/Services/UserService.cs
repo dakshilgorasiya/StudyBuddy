@@ -4,6 +4,7 @@ using StudyBuddy.DTOs;
 using StudyBuddy.Helpers;
 using StudyBuddy.Interfaces;
 using StudyBuddy.Models;
+using System.Security.Claims;
 
 namespace StudyBuddy.Services
 {
@@ -59,6 +60,23 @@ namespace StudyBuddy.Services
                 Email = user.Email,
                 Bio = user.Bio,
                 Token = token
+            };
+        }
+
+        public async Task<UserGetCurrentResponseDTO> GetCurrentUser(int id)
+        {
+            var user = await _userRepository.GetUserById(id);
+
+            if(user == null)
+            {
+                throw new ErrorResponse(StatusCodes.Status401Unauthorized, "Unauthorized");
+            }
+
+            return new UserGetCurrentResponseDTO
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Bio = user.Bio,
             };
         }
 

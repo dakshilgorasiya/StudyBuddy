@@ -6,5 +6,6 @@ namespace StudyBuddy.Interfaces
     {
         Task<UserRegisterResponseDTO> RegisterUser(UserRegisterRequestDTO dto);
         Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO dto);
+        Task<UserGetCurrentResponseDTO> GetCurrentUser(int id);
     }
 }

@@ -10,6 +10,7 @@ namespace StudyBuddy.Mappings
         {
             CreateMap<UserRegisterRequestDTO, User>();
             CreateMap<User, UserRegisterResponseDTO>();
+            CreateMap<User, UserGetCurrentResponseDTO>();
         }
     }
 }

@@ -2,6 +2,8 @@
 using StudyBuddy.Common;
 using StudyBuddy.DTOs;
 using StudyBuddy.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace StudyBuddy.Controllers
 {
@@ -69,6 +71,29 @@ namespace StudyBuddy.Controllers
                 }
 
                 return StatusCode(StatusCodes.Status200OK, new ApiResponse<UserLoginResponseDTO>(200, "Login successful", response));
+            }
+            catch (ErrorResponse ex)
+            {
+                var errorResponse = new { ex.StatusCode, ex.Message }; // Avoid serializing the entire exception
+                return StatusCode(ex.StatusCode, errorResponse);
+            }
+            catch (Exception)
+            {
+                var errorResponse = new ErrorResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return StatusCode(500, errorResponse);  // Return 500 error for unexpected issues
+            }
+        }
+
+        [HttpGet("getCurrentUser")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+                var response = await _userService.GetCurrentUser(id);
+                return StatusCode(StatusCodes.Status200OK, new ApiResponse<UserGetCurrentResponseDTO>(200, "User retrieved successfully", response));
             }
             catch (ErrorResponse ex)
             {

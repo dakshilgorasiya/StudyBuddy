@@ -12,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using StudyBuddy.Helpers;
 using Microsoft.OpenApi.Models;
+using StudyBuddy.Middlewares;
+using StudyBuddy.Common;
+using System.Text.Json;
 
 namespace StudyBuddy
 {
@@ -97,6 +100,37 @@ namespace StudyBuddy
                                 ValidAudience = jwtSection["Audience"],
                                 ValidateLifetime = true,
                             };
+                            options.Events = new JwtBearerEvents
+                            {
+                                OnChallenge = async context =>
+                                {
+                                    context.HandleResponse(); // Prevents default response
+
+                                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                                    context.Response.ContentType = "application/json";
+
+                                    var response = new
+                                    {
+                                        StatusCode = 401,
+                                        Message = "Unauthorized"
+                                    };
+
+                                    await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                                },
+                                OnForbidden = async context =>
+                                {
+                                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                                    context.Response.ContentType = "application/json";
+
+                                    var response = new
+                                    {
+                                        StatusCode = 403,
+                                        Message = "Forbidden"
+                                    };
+
+                                    await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                                }
+                            };
                         });
 
             var app = builder.Build();
@@ -106,6 +140,8 @@ namespace StudyBuddy
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 DataBaseSeeder.Seed(dbContext);
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
 
             // Configure the HTTP request pipeline.
