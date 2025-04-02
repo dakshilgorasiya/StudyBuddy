@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using StudyBuddy.Middlewares;
 using StudyBuddy.Common;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace StudyBuddy
 {
@@ -26,6 +27,8 @@ namespace StudyBuddy
 
             var jwtSection = builder.Configuration.GetSection("JwtSettings");
 
+            var cloudinarySection = builder.Configuration.GetSection("Cloudinary");
+
             var jwtKey = jwtSection["Secret"];
 
             builder.Services.AddSingleton(
@@ -36,6 +39,14 @@ namespace StudyBuddy
                     int.Parse(jwtSection["ExpirationMinutes"])
                 )
             );
+
+            builder.Services.AddSingleton(
+                new CloudinaryHelper(
+                        cloudinarySection["CloudName"],
+                        cloudinarySection["ApiKey"],
+                        cloudinarySection["ApiSecret"]
+                    )
+                );
 
             // Add services to the container.
 
@@ -78,8 +89,12 @@ namespace StudyBuddy
             // Dependect Injection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<IPostService, PostService>();
 
+            // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(UserMapping));
+            builder.Services.AddAutoMapper(typeof(PostMapping));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
@@ -132,6 +147,13 @@ namespace StudyBuddy
                                 }
                             };
                         });
+
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
+            });
 
             var app = builder.Build();
 

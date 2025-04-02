@@ -90,9 +90,7 @@ namespace StudyBuddy.Controllers
         {
             try
             {
-                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-                var response = await _userService.GetCurrentUser(id);
+                var response = await _userService.GetCurrentUser();
                 return StatusCode(StatusCodes.Status200OK, new ApiResponse<UserGetCurrentResponseDTO>(200, "User retrieved successfully", response));
             }
             catch (ErrorResponse ex)

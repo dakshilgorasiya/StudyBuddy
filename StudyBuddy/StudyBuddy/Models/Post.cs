@@ -10,6 +10,7 @@ namespace StudyBuddy.Models
         public string Title { get; set; }
         public string[] Tags { get; set; }
         public string TweetData { get; set; }
+        public string[] Images { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]

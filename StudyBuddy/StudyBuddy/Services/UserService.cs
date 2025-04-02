@@ -13,12 +13,14 @@ namespace StudyBuddy.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly JwtHelper _jwtHelper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, JwtHelper jwtHelper)
+        public UserService(IUserRepository userRepository, IMapper mapper, JwtHelper jwtHelper, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtHelper = jwtHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<UserRegisterResponseDTO> RegisterUser(UserRegisterRequestDTO dto)
@@ -63,9 +65,16 @@ namespace StudyBuddy.Services
             };
         }
 
-        public async Task<UserGetCurrentResponseDTO> GetCurrentUser(int id)
+        public async Task<UserGetCurrentResponseDTO> GetCurrentUser()
         {
-            var user = await _userRepository.GetUserById(id);
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ErrorResponse(StatusCodes.Status401Unauthorized, "User is not authenticated");
+            }
+
+            var user = await _userRepository.GetUserById(int.Parse(userId));
 
             if(user == null)
             {
