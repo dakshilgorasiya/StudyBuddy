@@ -19,7 +19,7 @@ namespace StudyBuddy.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterRequestDTO dto)
+        public async Task<IActionResult> Register([FromForm] UserRegisterRequestDTO dto)
         {
             try
             {

@@ -22,7 +22,8 @@ namespace StudyBuddy.Data
                     Username = "admin",
                     Email = "admin@gmail.com",
                     Password = hashedPassword,
-                    Role = UserRole.Admin
+                    Role = UserRole.Admin,
+                    Avatar = "https://res.cloudinary.com/studybuddybackend/image/upload/v1743609233/p7jmtw4gcxflcpm4asag.jpg"
                 };
 
                 context.Users.Add(adminUser);

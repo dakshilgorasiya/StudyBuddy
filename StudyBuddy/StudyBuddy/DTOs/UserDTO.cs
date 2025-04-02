@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StudyBuddy.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudyBuddy.DTOs
 {
@@ -19,6 +20,10 @@ namespace StudyBuddy.DTOs
         public string Password { get; set; }
 
         public string? Bio { get; set; }
+
+        [Required(ErrorMessage = "Avatar is required")]
+        [ImageOnly(ErrorMessage = "Only images are allowed")]
+        public IFormFile Avatar {  get; set; }
     }
 
     public class UserRegisterResponseDTO
@@ -26,6 +31,7 @@ namespace StudyBuddy.DTOs
         public string Username { get; set; }
         public string Email { get; set; }
         public string Bio { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class UserLoginRequestDTO 
@@ -46,6 +52,7 @@ namespace StudyBuddy.DTOs
         public string Email { get; set; }
         public string Bio { get; set; }
         public string Token { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class UserGetCurrentResponseDTO
@@ -53,5 +60,6 @@ namespace StudyBuddy.DTOs
         public string Username { get; set; }
         public string Email { get; set; }
         public string Bio { get; set; }
+        public string Avatar { get; set; }
     }
 }

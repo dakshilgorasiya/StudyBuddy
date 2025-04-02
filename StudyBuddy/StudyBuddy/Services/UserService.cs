@@ -14,13 +14,15 @@ namespace StudyBuddy.Services
         private readonly IMapper _mapper;
         private readonly JwtHelper _jwtHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly CloudinaryHelper _cloudinaryHelper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, JwtHelper jwtHelper, IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserRepository userRepository, IMapper mapper, JwtHelper jwtHelper, IHttpContextAccessor httpContextAccessor, CloudinaryHelper cloudinaryHelper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtHelper = jwtHelper;
             _httpContextAccessor = httpContextAccessor;
+            _cloudinaryHelper = cloudinaryHelper;
         }
 
         public async Task<UserRegisterResponseDTO> RegisterUser(UserRegisterRequestDTO dto)
@@ -36,9 +38,12 @@ namespace StudyBuddy.Services
                 throw new ErrorResponse(StatusCodes.Status400BadRequest, "User with this email already exists");
             }
 
+            var imageUrl = await _cloudinaryHelper.UploadImageAsync(dto.Avatar);
+
             var user = _mapper.Map<User>(dto);
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password); // Hash password
             user.Role = UserRole.User;
+            user.Avatar = imageUrl;
 
             await _userRepository.Register(user);
 
@@ -56,13 +61,12 @@ namespace StudyBuddy.Services
             }
 
             string token = _jwtHelper.GenerateToken(user);
-            return new UserLoginResponseDTO
-            {
-                Username = user.Username,
-                Email = user.Email,
-                Bio = user.Bio,
-                Token = token
-            };
+
+            UserLoginResponseDTO responseUser = _mapper.Map<UserLoginResponseDTO>(user);
+
+            responseUser.Token = token;
+
+            return responseUser;
         }
 
         public async Task<UserGetCurrentResponseDTO> GetCurrentUser()
@@ -81,12 +85,9 @@ namespace StudyBuddy.Services
                 throw new ErrorResponse(StatusCodes.Status401Unauthorized, "Unauthorized");
             }
 
-            return new UserGetCurrentResponseDTO
-            {
-                Username = user.Username,
-                Email = user.Email,
-                Bio = user.Bio,
-            };
+            UserGetCurrentResponseDTO response = _mapper.Map<UserGetCurrentResponseDTO>(user);
+
+            return response;
         }
 
     }
