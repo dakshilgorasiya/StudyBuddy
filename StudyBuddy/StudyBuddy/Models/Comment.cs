@@ -8,7 +8,6 @@ namespace StudyBuddy.Models
         [Key]
         public int Id { get; set; }
         public string Content { get; set; }
-        public string[]? Pictures { get; set; }
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public User Owner { get; set; }

@@ -21,5 +21,10 @@ namespace StudyBuddy.Repositories
             await _context.SaveChangesAsync();
             return post;
         }
+
+        public async Task<bool> IsPostExists(int postId)
+        {
+            return await _context.Posts.AnyAsync(p => p.Id == postId);
+        }
     }
 }

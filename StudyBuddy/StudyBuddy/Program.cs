@@ -93,11 +93,14 @@ namespace StudyBuddy
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IFollowRepository, FollowRepository>();
             builder.Services.AddScoped<IFollowService, FollowService>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(UserMapping));
             builder.Services.AddAutoMapper(typeof(PostMapping));
             builder.Services.AddAutoMapper(typeof(FollowMapping));
+            builder.Services.AddAutoMapper(typeof(CommentMapping));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
