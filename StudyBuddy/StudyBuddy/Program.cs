@@ -97,6 +97,8 @@ namespace StudyBuddy
             builder.Services.AddScoped<ICommentService, CommentService>();
             builder.Services.AddScoped<ILikeRepository, LikeRepository>();
             builder.Services.AddScoped<ILikeService, LikeService>();
+            builder.Services.AddScoped<IReportRepository, ReportRepository>();
+            builder.Services.AddScoped<IReportService,  ReportService>();
 
             // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(UserMapping));
@@ -104,6 +106,7 @@ namespace StudyBuddy
             builder.Services.AddAutoMapper(typeof(FollowMapping));
             builder.Services.AddAutoMapper(typeof(CommentMapping));
             builder.Services.AddAutoMapper(typeof(LikeMapping));
+            builder.Services.AddAutoMapper(typeof(ReportMapping));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
