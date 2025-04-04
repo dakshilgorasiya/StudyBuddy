@@ -18,6 +18,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using NLog.Web;
+using NLog;
 
 namespace StudyBuddy
 {
@@ -25,6 +27,8 @@ namespace StudyBuddy
     {
         public static void Main(string[] args)
         {
+            var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
+
             var builder = WebApplication.CreateBuilder(args);
 
             var jwtSection = builder.Configuration.GetSection("JwtSettings");
@@ -49,6 +53,10 @@ namespace StudyBuddy
                         cloudinarySection["ApiSecret"]
                     )
                 );
+
+            // Logging
+            builder.Logging.ClearProviders();
+            builder.Host.UseNLog();
 
             // Add rate limiting
             builder.Services.AddRateLimiter(options =>
@@ -198,7 +206,6 @@ namespace StudyBuddy
             }
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<LoggerMiddleware>();
 
 
             // Configure the HTTP request pipeline.
