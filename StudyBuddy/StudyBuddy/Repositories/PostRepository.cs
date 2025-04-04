@@ -26,5 +26,24 @@ namespace StudyBuddy.Repositories
         {
             return await _context.Posts.AnyAsync(p => p.Id == postId);
         }
+
+        public async Task<IEnumerable<Post>> GetAllPostsAsync()
+        {
+            return await _context.Posts
+                .Include(p => p.Owner)
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .ToListAsync();
+        }
+
+        public async Task<Post?> GetPostById(int postId)
+        {
+            return await _context.Posts
+                .Include(p => p.Owner)
+                .ThenInclude(u => u.Followers)
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .FirstOrDefaultAsync(p => p.Id == postId);
+        }
     }
 }

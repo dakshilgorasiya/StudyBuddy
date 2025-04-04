@@ -45,5 +45,27 @@ namespace StudyBuddy.Services
 
             return _mapper.Map<CreatePostResponceDTO>(createdPost);
         }
+
+        public async Task<List<GetAllPostsResponseDTO>> GetAllPostsAsync()
+        {
+            var posts = await _postRepository.GetAllPostsAsync();
+            if (posts == null || !posts.Any())
+            {
+                throw new ErrorResponse(StatusCodes.Status404NotFound, "No posts found");
+            }
+            List<GetAllPostsResponseDTO> postDtos = _mapper.Map<List<GetAllPostsResponseDTO>>(posts);
+            return postDtos;
+        }
+
+        public async Task<GetPostByIdResponseDTO> GetPostByIdAsync(int postId)
+        {
+            var post = await _postRepository.GetPostById(postId);
+            if (post == null)
+            {
+                throw new ErrorResponse(StatusCodes.Status404NotFound, "Post not found");
+            }
+            GetPostByIdResponseDTO postDto = _mapper.Map<GetPostByIdResponseDTO>(post);
+            return postDto;
+        }
     }
 }

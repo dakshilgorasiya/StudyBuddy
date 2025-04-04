@@ -29,4 +29,31 @@ namespace StudyBuddy.DTOs
         public string[] Images { get; set; }
         public DateTime CreatedAt { get; set; }
     }
+
+    public class GetAllPostsResponseDTO
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string[] Tags { get; set; }
+        public string TweetData { get; set; }
+        public string[] Images { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public UserDTO Owner {  get; set; }
+        public int Likes { get; set; }
+        public int Comments { get; set; }
+    }
+
+    public class GetPostByIdResponseDTO
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string[] Tags { get; set; }
+        public string TweetData { get; set; }
+        public string[] Images { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public UserDTO Owner { get; set; }
+        public int Likes { get; set; }
+        public int Comments { get; set; }
+        public int OwnerFollowers { get; set; }
+    }
 }

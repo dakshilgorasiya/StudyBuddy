@@ -18,13 +18,13 @@ namespace StudyBuddy.Data
         {
             modelBuilder.Entity<Follow>()
                 .HasOne(f => f.FollowedBy)
-                .WithMany(u => u.Followers)
+                .WithMany(u => u.Following)
                 .HasForeignKey(f => f.FollowedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Follow>()
                 .HasOne(f => f.FollowedTo)
-                .WithMany(u => u.Following)
+                .WithMany(u => u.Followers)
                 .HasForeignKey(f => f.FollowedToId)
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -6,5 +6,7 @@ namespace StudyBuddy.Interfaces
     {
         Task<Post> CreatePostAsync(Post post);
         Task<bool> IsPostExists(int postId);
+        Task<IEnumerable<Post>> GetAllPostsAsync();
+        Task<Post?> GetPostById(int postId);
     }
 }

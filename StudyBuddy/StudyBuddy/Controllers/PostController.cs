@@ -47,5 +47,45 @@ namespace StudyBuddy.Controllers
                 return StatusCode(500, errorResponse);  // Return 500 error for unexpected issues
             }
         }
+
+        [HttpGet("getAllPosts")]
+        public async Task<IActionResult> GetAllPosts()
+        {
+            try
+            {
+                List<GetAllPostsResponseDTO> posts = await _postService.GetAllPostsAsync();
+                return StatusCode(StatusCodes.Status200OK, new ApiResponse<List<GetAllPostsResponseDTO>>(200, "Posts retrieved successfully", posts));  // Success response
+            }
+            catch (ErrorResponse ex)
+            {
+                var errorResponse = new { ex.StatusCode, ex.Message }; // Avoid serializing the entire exception
+                return StatusCode(ex.StatusCode, errorResponse);
+            }
+            catch (Exception)
+            {
+                var errorResponse = new ErrorResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return StatusCode(500, errorResponse);  // Return 500 error for unexpected issues
+            }
+        }
+
+        [HttpGet("getPostById/{postId}")]
+        public async Task<IActionResult> GetPostById(int postId)
+        {
+            try
+            {
+                GetPostByIdResponseDTO post = await _postService.GetPostByIdAsync(postId);
+                return StatusCode(StatusCodes.Status200OK, new ApiResponse<GetPostByIdResponseDTO>(200, "Post retrieved successfully", post));  // Success response
+            }
+            catch (ErrorResponse ex)
+            {
+                var errorResponse = new { ex.StatusCode, ex.Message }; // Avoid serializing the entire exception
+                return StatusCode(ex.StatusCode, errorResponse);
+            }
+            catch (Exception)
+            {
+                var errorResponse = new ErrorResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return StatusCode(500, errorResponse);  // Return 500 error for unexpected issues
+            }
+        }
     }
 }
