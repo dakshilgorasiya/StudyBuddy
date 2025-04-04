@@ -49,12 +49,12 @@ namespace StudyBuddy.Controllers
         }
 
         [HttpGet("getAllPosts")]
-        public async Task<IActionResult> GetAllPosts()
+        public async Task<IActionResult> GetAllPosts(int page, int pagesize)
         {
             try
             {
-                List<GetAllPostsResponseDTO> posts = await _postService.GetAllPostsAsync();
-                return StatusCode(StatusCodes.Status200OK, new ApiResponse<List<GetAllPostsResponseDTO>>(200, "Posts retrieved successfully", posts));  // Success response
+                GetAllPostsResponseDTO posts = await _postService.GetAllPostsAsync(page, pagesize);
+                return StatusCode(StatusCodes.Status200OK, new ApiResponse<GetAllPostsResponseDTO>(200, "Posts retrieved successfully", posts));  // Success response
             }
             catch (ErrorResponse ex)
             {

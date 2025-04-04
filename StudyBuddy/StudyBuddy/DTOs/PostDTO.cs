@@ -32,15 +32,8 @@ namespace StudyBuddy.DTOs
 
     public class GetAllPostsResponseDTO
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string[] Tags { get; set; }
-        public string TweetData { get; set; }
-        public string[] Images { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public UserDTO Owner {  get; set; }
-        public int Likes { get; set; }
-        public int Comments { get; set; }
+        public List<PostDTO> Posts { get; set; }
+        public int TotalPages { get; set; }
     }
 
     public class GetPostByIdResponseDTO

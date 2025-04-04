@@ -46,15 +46,19 @@ namespace StudyBuddy.Services
             return _mapper.Map<CreatePostResponceDTO>(createdPost);
         }
 
-        public async Task<List<GetAllPostsResponseDTO>> GetAllPostsAsync()
+        public async Task<GetAllPostsResponseDTO> GetAllPostsAsync(int page, int pagesize)
         {
-            var posts = await _postRepository.GetAllPostsAsync();
+            var posts = await _postRepository.GetAllPostsAsync(page, pagesize);
             if (posts == null || !posts.Any())
             {
                 throw new ErrorResponse(StatusCodes.Status404NotFound, "No posts found");
             }
-            List<GetAllPostsResponseDTO> postDtos = _mapper.Map<List<GetAllPostsResponseDTO>>(posts);
-            return postDtos;
+            List<PostDTO> postDtos = _mapper.Map<List<PostDTO>>(posts);
+            GetAllPostsResponseDTO response = new GetAllPostsResponseDTO();
+            response.Posts = postDtos;
+            int postCount = await _postRepository.CountPost();
+            response.TotalPages = (int)Math.Ceiling((double)postCount / pagesize);
+            return response;
         }
 
         public async Task<GetPostByIdResponseDTO> GetPostByIdAsync(int postId)

@@ -13,9 +13,16 @@ namespace StudyBuddy.Mappings
 
             CreateMap<Post, CreatePostResponceDTO>();
 
-            CreateMap<Post, GetAllPostsResponseDTO>()
+            CreateMap<Post, PostDTO>()
                 .ForMember(dest => dest.Likes, opt => opt.MapFrom(src => src.Likes.Count))
-                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Count));
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Count))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => new UserDTO
+                {
+                    Id = src.Owner.Id,
+                    Username = src.Owner.Username,
+                    Email = src.Owner.Email,
+                    Avatar = src.Owner.Avatar
+                }));
 
             CreateMap<Post, GetPostByIdResponseDTO>()
                 .ForMember(dest => dest.Likes, opt => opt.MapFrom(src => src.Likes.Count))

@@ -16,6 +16,9 @@
         public string TweetData { get; set; }
         public DateTime CreatedAt { get; set; }
         public UserDTO Author { get; set; }
+        public int OwnerFollowers { get; set; }
+        public int Likes { get; set; }
+        public int Comments { get; set; }
         public string[] Images { get; set; }
     }
 }

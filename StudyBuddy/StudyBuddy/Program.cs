@@ -184,6 +184,7 @@ namespace StudyBuddy
             }
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<LoggerMiddleware>();
 
 
             // Configure the HTTP request pipeline.

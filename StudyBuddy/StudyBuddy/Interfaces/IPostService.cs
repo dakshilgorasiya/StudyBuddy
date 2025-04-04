@@ -6,7 +6,7 @@ namespace StudyBuddy.Interfaces
     public interface IPostService
     {
         Task<CreatePostResponceDTO> CreatePostAsync(CreatePostRequestDTO createPostDto);
-        Task<List<GetAllPostsResponseDTO>> GetAllPostsAsync();
+        Task<GetAllPostsResponseDTO> GetAllPostsAsync(int page, int pagesize);
         Task<GetPostByIdResponseDTO> GetPostByIdAsync(int postId);
     }
 }
