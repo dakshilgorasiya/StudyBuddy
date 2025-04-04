@@ -16,6 +16,8 @@ using StudyBuddy.Middlewares;
 using StudyBuddy.Common;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 namespace StudyBuddy
 {
@@ -47,6 +49,18 @@ namespace StudyBuddy
                         cloudinarySection["ApiSecret"]
                     )
                 );
+
+            // Add rate limiting
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.AddFixedWindowLimiter("fixed", limiterOptions =>
+                {
+                    limiterOptions.PermitLimit = 20; 
+                    limiterOptions.Window = TimeSpan.FromMinutes(1); 
+                    limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    limiterOptions.QueueLimit = 3; 
+                });
+            });
 
             // Add services to the container.
 
@@ -198,7 +212,9 @@ namespace StudyBuddy
 
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseRateLimiter();
+
+            app.MapControllers().RequireRateLimiting("fixed");
 
             app.Run();
         }
