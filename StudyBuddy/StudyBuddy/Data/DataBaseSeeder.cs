@@ -15,7 +15,7 @@ namespace StudyBuddy.Data
             // Check if the admin user already exists
             if (!context.Users.Any(u => u.Username == "admin"))
             {
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword("admin", 12);
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword("adminadmin", 12);
 
                 var adminUser = new User
                 {

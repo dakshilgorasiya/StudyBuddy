@@ -86,6 +86,12 @@ namespace StudyBuddy
                 });
             });
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+            });
+
             // Dependect Injection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -99,6 +105,7 @@ namespace StudyBuddy
             builder.Services.AddScoped<ILikeService, LikeService>();
             builder.Services.AddScoped<IReportRepository, ReportRepository>();
             builder.Services.AddScoped<IReportService,  ReportService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(UserMapping));
@@ -107,6 +114,7 @@ namespace StudyBuddy
             builder.Services.AddAutoMapper(typeof(CommentMapping));
             builder.Services.AddAutoMapper(typeof(LikeMapping));
             builder.Services.AddAutoMapper(typeof(ReportMapping));
+            builder.Services.AddAutoMapper(typeof(AdminMapping));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
