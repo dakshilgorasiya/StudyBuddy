@@ -27,7 +27,8 @@ namespace StudyBuddy.Mappings
                     Email = src.Owner.Email,
                     Avatar = src.Owner.Avatar
                 }))
-                .ForMember(dest => dest.ReplyCount, opt => opt.MapFrom(src => src.Replies.Count));
+                .ForMember(dest => dest.ReplyCount, opt => opt.MapFrom(src => src.Replies.Count))
+                .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes.Count));
 
             CreateMap<Comment, GetReplyResponseDTO>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDTO
@@ -37,7 +38,8 @@ namespace StudyBuddy.Mappings
                     Email = src.Owner.Email,
                     Avatar = src.Owner.Avatar
                 }))
-                .ForMember(dest => dest.ReplyCount, opt => opt.MapFrom(src => src.Replies.Count));
+                .ForMember(dest => dest.ReplyCount, opt => opt.MapFrom(src => src.Replies.Count))
+                .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes.Count));
 
             CreateMap<User, UserDTO>();
         }

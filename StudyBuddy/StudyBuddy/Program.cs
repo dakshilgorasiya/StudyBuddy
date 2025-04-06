@@ -197,6 +197,8 @@ namespace StudyBuddy
                 options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
             });
 
+            builder.Services.AddMemoryCache();
+
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

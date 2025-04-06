@@ -32,6 +32,7 @@ namespace StudyBuddy.Repositories
                 .Where(c => c.PostId == postId)
                 .Include(c => c.Owner)
                 .Include(c => c.Replies)
+                .Include(c => c.Likes)
                 .ToListAsync();
         }
 
@@ -41,6 +42,7 @@ namespace StudyBuddy.Repositories
                 .Where(c => c.CommentId == commentId)
                 .Include(c => c.Owner)
                 .Include(c => c.Replies)
+                .Include(c => c.Likes)
                 .ToListAsync();
         }
 

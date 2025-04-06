@@ -33,6 +33,7 @@ namespace StudyBuddy.Repositories
                 .Include(p => p.Owner)
                 .Include(p => p.Comments)
                 .Include(p => p.Likes)
+                .OrderByDescending(p => p.CreatedAt)
                 .Skip((page - 1) * pagesize)
                 .Take(pagesize)
                 .ToListAsync();

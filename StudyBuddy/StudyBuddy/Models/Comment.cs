@@ -8,6 +8,7 @@ namespace StudyBuddy.Models
         [Key]
         public int Id { get; set; }
         public string Content { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public User Owner { get; set; }

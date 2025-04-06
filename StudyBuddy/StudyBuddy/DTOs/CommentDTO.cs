@@ -12,6 +12,7 @@ namespace StudyBuddy.DTOs
         public int Id { get; set; }
         public string Content { get; set; }
         public int PostId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
     public class PostReplyRequestDTO 
     {
@@ -23,6 +24,7 @@ namespace StudyBuddy.DTOs
         public int Id { get; set; }
         public string Content { get; set; }
         public int CommentId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
     public class GetCommentsResponseDTO
     {
@@ -31,6 +33,8 @@ namespace StudyBuddy.DTOs
         public int PostId { get; set; }
         public UserDTO User { get; set; }
         public int ReplyCount { get; set; }
+        public int LikeCount { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
     public class GetReplyResponseDTO 
     {
@@ -39,5 +43,7 @@ namespace StudyBuddy.DTOs
         public int CommentId { get; set; }
         public UserDTO User { get; set; }
         public int ReplyCount { get; set; }
+        public int LikeCount { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

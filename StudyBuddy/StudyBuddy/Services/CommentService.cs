@@ -5,6 +5,7 @@ using System.Security.Claims;
 using StudyBuddy.Common;
 using StudyBuddy.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace StudyBuddy.Services
 {
@@ -15,14 +16,16 @@ namespace StudyBuddy.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMemoryCache _cache;
 
-        public CommentService(ICommentRepository commentRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPostRepository postRepository, IUserRepository userRepository)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IPostRepository postRepository, IUserRepository userRepository, IMemoryCache cache)
         {
             _commentRepository = commentRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _postRepository = postRepository;
             _userRepository = userRepository;
+            _cache = cache;
         }
 
         public async Task<PostCommentResponseDTO> PostCommentAsync(PostCommentRequestDTO commentDTO)
@@ -68,6 +71,13 @@ namespace StudyBuddy.Services
 
         public async Task<List<GetCommentsResponseDTO>> GetCommentsAsync(int postId)
         {
+            string cacheKey = "comments_" + postId;
+
+            if(_cache.TryGetValue(cacheKey, out List<GetCommentsResponseDTO> cachedComments))
+            {
+                return cachedComments;
+            }
+
             bool postExists = await _postRepository.IsPostExists(postId);
             if (!postExists)
             {
@@ -76,11 +86,22 @@ namespace StudyBuddy.Services
 
             var comments = await _commentRepository.GetAllCommentsByPostId(postId);
 
-            return _mapper.Map<List<GetCommentsResponseDTO>>(comments);
+            var response = _mapper.Map<List<GetCommentsResponseDTO>>(comments);
+
+            _cache.Set(cacheKey, response, TimeSpan.FromMinutes(5));
+
+            return response;
         }
 
         public async Task<List<GetReplyResponseDTO>> GetRepliesAsync(int commentId)
         {
+            string cacheKey = "replies_" + commentId;
+
+            if (_cache.TryGetValue(cacheKey, out List<GetReplyResponseDTO> cachedReplies))
+            {
+                return cachedReplies;
+            }
+
             bool commentExists = await _commentRepository.IsCommentExists(commentId);
             if (!commentExists)
             {
@@ -88,7 +109,11 @@ namespace StudyBuddy.Services
             }
 
             var replies = await _commentRepository.GetAllRepliesByCommentId(commentId);
-            return _mapper.Map<List<GetReplyResponseDTO>>(replies);
+            var response = _mapper.Map<List<GetReplyResponseDTO>>(replies);
+
+            _cache.Set(cacheKey, response, TimeSpan.FromMinutes(5));
+
+            return response;
         }
     }
 }
